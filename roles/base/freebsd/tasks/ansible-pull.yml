@@ -1,0 +1,56 @@
+---
+- name: install ansible
+  pkgng:
+    name: ansible
+    state: present
+
+- name: create service account
+  user:
+    name: "{{ service_account }}"
+    groups: wheel
+    home: "/home/{{ service_account }}"
+    state: present
+
+- name: add mail alias for service account to root
+  lineinfile:
+    dest: "/etc/mail/aliases"
+    line: "{{ service_account }}: root"
+  notify: newaliases
+
+- name: install vault password
+  copy:
+    content: "{{ vault_password }}"
+    dest: "/home/{{ service_account }}/.vault-password"
+    mode: 0600
+    owner: "{{ service_account }}"
+    group: wheel
+
+# ansible-pull expects the inventory file to exist already, even before it
+# clones the repo, so we clone the repo explicitly.
+- name: clone ansible git repository
+  sudo_user: "{{ service_account }}"
+  git:
+    repo: "{{ ansible_git_repository }}"
+    dest: "/home/{{ service_account }}/repo"
+    version: master
+    accept_hostkey: yes
+
+- name: install ansible-pull cronscript
+  tags: ansible-pull
+  template:
+    src: "run-ansible-pull.sh.j2"
+    dest: "/home/{{ service_account }}/run-ansible-pull.sh"
+    mode: 0755
+    owner: "{{ service_account }}"
+    group: wheel
+
+- name: install ansible-pull crontask
+  tags: ansible-pull
+  cron:
+    name: ansible-pull
+    job: "/home/{{ service_account }}/run-ansible-pull.sh"
+    user: "{{ service_account }}"
+    minute: 0
+    state: "{{ 'absent' if no_ansible_pull|default('false')|bool else 'present' }}"
+
+# vim:ft=yaml:nosi:noai:ts=2:sw=2

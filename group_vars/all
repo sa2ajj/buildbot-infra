@@ -44,10 +44,16 @@ mandatory_packages:
 # least, at the moment).
 # The original list is based on http://trac.buildbot.net/ticket/3036
 utility_packages:
-- bash
-- rsync
-- screen
-- vim-lite  # we probably do not want to bring all the stuff
+  freebsd:
+  - bash
+  - rsync
+  - screen
+  - vim-lite  # we probably do not want to bring all the stuff
+  debian:
+  - bash
+  - rsync
+  - screen
+  - vim
 
 # The upstream repository from which the service host crontask should pull
 ansible_git_repository: git://github.com/buildbot/buildbot-infra
@@ -108,3 +114,5 @@ track_config:
   author_email: "sysadmin@buildbot.net"
   default_author_name: "Unknown"
   default_author_email: "sysadmin@buildbot.net"
+
+# vim:ts=2:sw=2:noai:nosi

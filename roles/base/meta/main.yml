@@ -1,0 +1,6 @@
+---
+dependencies:
+- role: base/freebsd
+  when: ansible_os_family == 'FreeBSD'
+- role: base/debian
+  when: ansible_os_family == 'Debian'
