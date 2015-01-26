@@ -1,0 +1,11 @@
+---
+- name: configure linux1
+  hosts: linux1
+  gather_facts: no
+  connection: local
+  sudo: yes
+
+  roles:
+  - base
+
+# vim:ts=2:sw=2:noai:nosi

@@ -43,6 +43,7 @@
 - include: "jail-mysql.yml"
 
 - include: "host-vm1.yml"
+- include: "vm-linux1.yml"
 
 - include: "track-config.yml"
   vars:
