@@ -18,9 +18,10 @@
       key: "{{ansible_hostname}}"
     changed_when: False
 
-- include: "track-config.yml"
-  vars:
-    commit_message: "pre-ansible checkin"
+# XXX(sa2ajj): temporarily disable this step
+#- include: "track-config.yml"
+#  vars:
+#    commit_message: "pre-ansible checkin"
 
 # Service hosts and their jails
 - include: "host-service1.yml"
